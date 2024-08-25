@@ -120,6 +120,7 @@ input:disabled {
 .images-item {
   position: relative;
   border: 1px solid var(--dark-grey);
+  min-width: 360px;
 }
 
 .image-statistics {
@@ -204,6 +205,10 @@ strong {
   100% {
     box-shadow: 10px 0 var(--text-color), 20px 0 var(--text-color);
   }
+}
+
+.end-line {
+  text-align: center;
 }
 
 .hidden {

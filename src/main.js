@@ -54,7 +54,13 @@ formElem.addEventListener("submit", (event) => {
 });
 
 btnLoadMore.addEventListener("click", (event) => {
-    if (searchQuery)
+    if (searchQuery) {
+        // Show loading message
+        loader.classList.remove("hidden");
+        // Hide Load mode button and end line message
+        endLine.classList.add("hidden");
+        btnLoadMore.classList.add("hidden");
+
         searchImages(searchQuery)
             .then((images) => {
                 loader.classList.add("hidden");
@@ -70,8 +76,9 @@ btnLoadMore.addEventListener("click", (event) => {
                 }
                 // Else - show pictures
                 else {
-                    console.log(images);
                     showImages(images);
+
+                    // Show end line message and hide Load more button
                     if (images.hits.length < getPerPage()) {
                         btnLoadMore.classList.add("hidden");
                         endLine.classList.remove("hidden");
@@ -79,7 +86,23 @@ btnLoadMore.addEventListener("click", (event) => {
                     else
                         btnLoadMore.classList.remove("hidden");
 
+                    // Scroll down
+                    const h = document.querySelector(".images-item").getBoundingClientRect().height;
+                    window.scrollBy({
+                        top: 2 * h,
+                        left: 0,
+                        behavior: "smooth"
+                    });
                 }
             })
             .catch((error) => console.log(error));
+    }
+    else
+        iziToast.error({
+                        class: "error-alert",
+                        message: "Search query is empty",
+                        messageColor: "white",
+                        position: "topRight",
+                        maxWidth: 432
+                    });
 });
