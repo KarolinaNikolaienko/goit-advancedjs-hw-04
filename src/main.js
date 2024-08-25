@@ -10,7 +10,7 @@ const loader = document.querySelector(".loader");
 const endLine = document.querySelector(".end-line");
 let searchQuery = "";
 
-formElem.addEventListener("submit", (event) => {
+formElem.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.target;
 
@@ -33,25 +33,23 @@ formElem.addEventListener("submit", (event) => {
         resetPage();
 
         // Search image
-        searchImages(searchQuery)
-            .then((images) => {
-                loader.classList.add("hidden");
-                // If there is no images - show a toast
-                if (!images.hits.length) {
-                    iziToast.error({
-                        class: "error-alert",
-                        message: "Sorry, there are no images matching your search query. Please try again!",
-                        messageColor: "white",
-                        position: "topRight",
-                        maxWidth: 432
-                    });
-                }
-                // Else - show pictures
-                else {
-                    showImages(images);
-                    btnLoadMore.classList.remove("hidden");
-                }
+        const images = await searchImages(searchQuery);
+        loader.classList.add("hidden");
+        // If there is no images - show a toast
+        if (!images.data.hits.length) {
+            iziToast.error({
+                class: "error-alert",
+                message: "Sorry, there are no images matching your search query. Please try again!",
+                messageColor: "white",
+                position: "topRight",
+                maxWidth: 432
             });
+        }
+        // Else - show pictures
+        else {
+            showImages(images);
+            btnLoadMore.classList.remove("hidden");
+        }
     }
     else
         iziToast.error({
@@ -63,7 +61,7 @@ formElem.addEventListener("submit", (event) => {
         });
 });
 
-btnLoadMore.addEventListener("click", (event) => {
+btnLoadMore.addEventListener("click", async (event) => {
     // Search query check
     if (searchQuery !== "") {
         // Show loading message
@@ -72,40 +70,38 @@ btnLoadMore.addEventListener("click", (event) => {
         endLine.classList.add("hidden");
         btnLoadMore.classList.add("hidden");
 
-        searchImages(searchQuery)
-            .then((images) => {
-                loader.classList.add("hidden");
-                // If there is no images - show a toast
-                if (!images.hits.length) {
-                    iziToast.error({
-                        class: "error-alert",
-                        message: "Sorry, there are no images any more!",
-                        messageColor: "white",
-                        position: "topRight",
-                        maxWidth: 432
-                    });
-                }
-                // Else - show pictures
-                else {
-                    showImages(images);
-
-                    // Show end line message and hide Load more button
-                    if (images.hits.length < getPerPage()) {
-                        btnLoadMore.classList.add("hidden");
-                        endLine.classList.remove("hidden");
-                    }
-                    else
-                        btnLoadMore.classList.remove("hidden");
-
-                    // Scroll down
-                    const h = document.querySelector(".images-item").getBoundingClientRect().height;
-                    window.scrollBy({
-                        top: 2 * h,
-                        left: 0,
-                        behavior: "smooth"
-                    });
-                }
+        const images = await searchImages(searchQuery);
+        loader.classList.add("hidden");
+        // If there is no images - show a toast
+        if (!images.data.hits.length) {
+            iziToast.error({
+                class: "error-alert",
+                message: "Sorry, there are no images any more!",
+                messageColor: "white",
+                position: "topRight",
+                maxWidth: 432
             });
+        }
+        // Else - show pictures
+        else {
+            showImages(images);
+
+            // Show end line message and hide Load more button
+            if (images.hits.length < getPerPage()) {
+                btnLoadMore.classList.add("hidden");
+                endLine.classList.remove("hidden");
+            }
+            else
+                btnLoadMore.classList.remove("hidden");
+
+            // Scroll down
+            const h = document.querySelector(".images-item").getBoundingClientRect().height;
+            window.scrollBy({
+                top: 2 * h,
+                left: 0,
+                behavior: "smooth"
+            });
+        }
     }
     else
         iziToast.error({

@@ -3,7 +3,7 @@ import axios from "axios";
 let currentPage = 1;
 const per_page = 15;
 
-export async function searchImages(query) {
+export function searchImages(query) {
     const config = new URLSearchParams({
         key: "3632143-ebeee10190d206f1a5cb99fa1",
         q: encodeURIComponent(query),
@@ -13,10 +13,8 @@ export async function searchImages(query) {
         per_page: per_page,
         page: currentPage
     });
-    const response = await axios.get(`https://pixabay.com/api/?${config}`);
     currentPage += 1;
-    return response.data;
-
+    return axios.get(`https://pixabay.com/api/?${config}`);
 
     // return fetch(`https://pixabay.com/api/?${config}`)
     //     .then((response) => {

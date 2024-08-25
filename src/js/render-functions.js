@@ -13,8 +13,8 @@ export function showImages(images) {
   let imagesHTML = "";
 
   // Add found images
-  for (let i = 0; i < images.hits.length; i++) {
-      const img = images.hits[i];
+  for (let i = 0; i < images.data.hits.length; i++) {
+      const img = images.data.hits[i];
       imagesHTML += `<li class="images-item">
   <a class="images-link" href="${img.largeImageURL}" onclick="return false">
   <img
