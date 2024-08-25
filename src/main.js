@@ -87,7 +87,7 @@ btnLoadMore.addEventListener("click", async (event) => {
             showImages(images);
 
             // Show end line message and hide Load more button
-            if (images.hits.length < getPerPage()) {
+            if (images.data.hits.length < getPerPage()) {
                 btnLoadMore.classList.add("hidden");
                 endLine.classList.remove("hidden");
             }
