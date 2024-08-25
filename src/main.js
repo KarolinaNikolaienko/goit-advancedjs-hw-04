@@ -12,49 +12,60 @@ let searchQuery = "";
 
 formElem.addEventListener("submit", (event) => {
     event.preventDefault();
-
-    // Clear the gallery
-    const imagesList = document.querySelector(".images-list");
-    imagesList.classList.add("hidden");
-    imagesList.innerHTML = "";
-
     const form = event.target;
-    searchQuery = form.elements.query.value;
-    // Show loading message
-    loader.classList.remove("hidden");
 
-    // Hide Load mode button and end line message
-    endLine.classList.add("hidden");
-    btnLoadMore.classList.add("hidden");
+    // Search query check
+    searchQuery = form.elements.query.value.trim();
+    if (searchQuery !== "") {
+        // Clear the gallery
+        const imagesList = document.querySelector(".images-list");
+        imagesList.classList.add("hidden");
+        imagesList.innerHTML = "";
 
-    // Reset page
-    resetPage();
+        // Show loading message
+        loader.classList.remove("hidden");
 
-    // Search image
-    searchImages(searchQuery)
-        .then((images) => {
-            loader.classList.add("hidden");
-            // If there is no images - show a toast
-            if (!images.hits.length) {
-                iziToast.error({
-                    class: "error-alert",
-                    message: "Sorry, there are no images matching your search query. Please try again!",
-                    messageColor: "white",
-                    position: "topRight",
-                    maxWidth: 432
-                });
-            }
-            // Else - show pictures
-            else {
-                showImages(images);
-                btnLoadMore.classList.remove("hidden");
-            }
-        })
-        .catch((error) => console.log(error));
+        // Hide Load mode button and end line message
+        endLine.classList.add("hidden");
+        btnLoadMore.classList.add("hidden");
+
+        // Reset page
+        resetPage();
+
+        // Search image
+        searchImages(searchQuery)
+            .then((images) => {
+                loader.classList.add("hidden");
+                // If there is no images - show a toast
+                if (!images.hits.length) {
+                    iziToast.error({
+                        class: "error-alert",
+                        message: "Sorry, there are no images matching your search query. Please try again!",
+                        messageColor: "white",
+                        position: "topRight",
+                        maxWidth: 432
+                    });
+                }
+                // Else - show pictures
+                else {
+                    showImages(images);
+                    btnLoadMore.classList.remove("hidden");
+                }
+            });
+    }
+    else
+        iziToast.error({
+            class: "error-alert",
+            message: "Search query is empty",
+            messageColor: "white",
+            position: "topRight",
+            maxWidth: 432
+        });
 });
 
 btnLoadMore.addEventListener("click", (event) => {
-    if (searchQuery) {
+    // Search query check
+    if (searchQuery !== "") {
         // Show loading message
         loader.classList.remove("hidden");
         // Hide Load mode button and end line message
@@ -94,15 +105,14 @@ btnLoadMore.addEventListener("click", (event) => {
                         behavior: "smooth"
                     });
                 }
-            })
-            .catch((error) => console.log(error));
+            });
     }
     else
         iziToast.error({
-                        class: "error-alert",
-                        message: "Search query is empty",
-                        messageColor: "white",
-                        position: "topRight",
-                        maxWidth: 432
-                    });
+            class: "error-alert",
+            message: "Search query is empty",
+            messageColor: "white",
+            position: "topRight",
+            maxWidth: 432
+        });
 });

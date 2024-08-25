@@ -1,6 +1,12 @@
 import simpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+const lightboxImages = new simpleLightbox('.images-list a', {
+    captions: true,
+    captionsData: 'alt',
+    captionDelay: 250,
+});
+
 export function showImages(images) {
   const imagesList = document.querySelector(".images-list");
   imagesList.classList.remove("hidden");
@@ -42,10 +48,5 @@ export function showImages(images) {
   imagesList.insertAdjacentHTML("beforeend", imagesHTML);
   
   // Refresh lightbox
-  const lightboxImages = new simpleLightbox('.images-list a', {
-      captions: true,
-      captionsData: 'alt',
-      captionDelay: 250,
-  });
   lightboxImages.refresh();
 }
